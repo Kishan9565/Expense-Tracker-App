@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3"
+    android:showDividers="middle"
+    android:divider="@drawable/vertical_divider"
+    android:padding="8dp"
+    android:background="#FFFFFF"
+    android:elevation="1dp"
+    android:layout_marginBottom="4dp">
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="24/09/25"
+        android:textSize="12sp"
+        android:textColor="#000"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tvPaymentMethod"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="UPI"
+        android:textSize="12sp"
+        android:textColor="#000"
+        android:gravity="center" />
+
+
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="₹120.00"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:gravity="end" />
+
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="40dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_dilog"
+        android:padding="20dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Income"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="#171717"/>
+
+
+        <EditText
+            android:id="@+id/etIncomeAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="16dp"/>
+
+
+        <AutoCompleteTextView
+            android:id="@+id/etIncomeSource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select source"
+            android:drawableEnd="@drawable/down"
+            android:background="@drawable/edittext_bg"
+            android:inputType="none"
+            android:focusable="false"
+            android:layout_marginTop="12dp"/>
+
+
+        <EditText
+            android:id="@+id/etIncomeDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select date"
+            android:focusable="false"
+            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="12dp"/>
+
+
+        <EditText
+            android:id="@+id/etIncomeNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Add a note"
+            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="12dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnCancelIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:backgroundTint="#ED5B5B"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btnAddIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Income"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#4CAF50"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
