@@ -1,12 +1,12 @@
 # 💰 Expense Tracker App
 
-A modern and efficient **Android application** built with **Kotlin**, **Room Database**, and **LiveData** to manage daily expenses and visualize spending patterns.
+A powerful and user-friendly **Android application** built with **Kotlin**, **Room Database**, and **LiveData** to track daily expenses, visualize reports, and manage group expenses efficiently.
 
 ---
 
 ## 📱 Overview
-The **Expense Tracker App** allows users to record, categorize, and analyze their expenses effortlessly.  
-With real-time updates using **LiveData** and persistent local storage via **Room**, it delivers a smooth and reliable user experience.
+The **Expense Tracker App** helps users record and analyze their daily transactions.  
+With interactive **line charts**, detailed **expense reports**, and a unique **group splitter** feature, users can easily monitor and manage their spending habits.
 
 ---
 
@@ -14,33 +14,36 @@ With real-time updates using **LiveData** and persistent local storage via **Roo
 - **Language:** Kotlin  
 - **Architecture:** MVVM (Model-View-ViewModel)  
 - **Database:** Room (with LiveData & Coroutines)  
-- **UI:** XML with Material Design Components  
-- **Dependency Injection:** ViewModelProvider / AndroidX Lifecycle  
+- **UI:** XML + Material Design Components  
+- **Chart Library:** MPAndroidChart (Line Chart Visualization)  
+- **Dependency Injection:** AndroidX Lifecycle / ViewModelProvider  
 - **Build Tool:** Gradle  
 
 ---
 
 ## ✨ Features
-- ➕ Add, edit, and delete expense records  
-- 📂 Categorize transactions (Food, Travel, Bills, etc.)  
-- 📅 Filter by date and category  
-- 📊 Real-time updates with LiveData  
-- 📈 Monthly and yearly expense summaries  
-- 💾 Auto data persistence with Room  
-- 🎨 Clean and responsive Material UI  
+- ➕ Add, edit, and delete expense entries  
+- 📂 Categorize transactions (Food, Travel, Bills, Shopping, etc.)  
+- 📈 **Line Chart Visualization** for expense trends  
+- 📋 **View Reports** – monthly and category-wise summaries  
+- 👥 **Group Splitter** – split expenses among friends or groups  
+- 🔍 Filter and search by date, amount, or category  
+- 💾 Offline data storage using Room  
+- 🎨 Modern Material Design interface  
 
 ---
 
 ## 🚀 Future Enhancements
 - 🌙 Dark Mode Support  
 - ☁️ Firebase Sync for Cloud Backup  
-- 🤖 AI-based Spending Insights  
+- 🤖 Smart Expense Suggestions  
 - 📄 Export Reports (PDF/Excel)  
+- 🔔 Smart Budget Alerts  
 
 ---
 
 ## 🧠 Learning Outcome
-This project was developed to gain practical experience in **Kotlin app development**, **Room database management**, and **MVVM architecture** using **LiveData** for reactive UI updates.
+This project was developed to strengthen concepts in **Kotlin**, **Room Database**, **LiveData**, and **MVVM architecture**, along with implementing **data visualization** and **group-based expense management**.
 
 ---
 
@@ -50,5 +53,5 @@ This project was developed to gain practical experience in **Kotlin app developm
 
 ---
 
-## 📸 Screenshots
- 
+## 📸 Screenshots 
+
