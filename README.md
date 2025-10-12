@@ -54,4 +54,5 @@ This project was developed to strengthen concepts in **Kotlin**, **Room Database
 ---
 
 ## 📸 Screenshots 
+<img width="1920" height="1080" alt="Chemical Reactions and Energy Changes Education Presentation in Blue White Flat Cartoon Style" src="https://github.com/user-attachments/assets/6dfa1504-01d6-4fb1-99c2-fecc1e9f43f8" />
 
