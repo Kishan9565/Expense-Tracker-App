@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Vyrup</string>
+    <string name="pick_category">Please select a category</string>
+    <string name="saved">Transaction saved</string>
+    <string name="home">Home</string>
+    <string name="activity">Activity</string>
+    <string name="split">Split</string>
+    <string name="more">More</string>
+    <string name="add_expense">Add expense</string>
+    <string name="your_month_will_appear_here">Your month will appear here</string>
+    <string name="spent_this_month">Spent this month</string>
+    <string name="today">Today</string>
+    <string name="delete">Delete</string>
+    <string name="undo">Undo</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+</resources>
