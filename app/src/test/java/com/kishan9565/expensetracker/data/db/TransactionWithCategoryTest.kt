@@ -4,30 +4,30 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TransactionWithCategoryTest {
-
     @Test
-    fun displayTitle_usesNote_ifNotBlank() {
-        val tx = TransactionEntity(type = TxType.EXPENSE, amountPaise = 1000, categoryId = 1, payment = PaymentMethod.CASH, note = "Coffee", occurredAtMillis = 0, localDate = 0, createdAtMillis = 0, updatedAtMillis = 0)
-        val cat = CategoryEntity(id = 1, name = "Food", type = TxType.EXPENSE, iconKey = "food")
-        
-        val withCat = TransactionWithCategory(tx, cat)
-        assertEquals("Coffee", withCat.displayTitle())
+    fun fallback_to_category_name_when_note_blank() {
+        val txWithCat = TransactionWithCategory(
+            transaction = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "", 0L, 0L, TxSource.MANUAL, null, 0L, 0L),
+            category = CategoryEntity(1L, "Food", TxType.EXPENSE, 1)
+        )
+        assertEquals("Food", txWithCat.displayTitle())
     }
 
     @Test
-    fun displayTitle_usesCategory_ifNoteIsBlank() {
-        val tx = TransactionEntity(type = TxType.EXPENSE, amountPaise = 1000, categoryId = 1, payment = PaymentMethod.CASH, note = "   ", occurredAtMillis = 0, localDate = 0, createdAtMillis = 0, updatedAtMillis = 0)
-        val cat = CategoryEntity(id = 1, name = "Food", type = TxType.EXPENSE, iconKey = "food")
-        
-        val withCat = TransactionWithCategory(tx, cat)
-        assertEquals("Food", withCat.displayTitle())
+    fun fallback_to_type_name_when_category_null() {
+        val txWithCat = TransactionWithCategory(
+            transaction = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "", 0L, 0L, TxSource.MANUAL, null, 0L, 0L),
+            category = null
+        )
+        assertEquals("Expense", txWithCat.displayTitle())
     }
 
     @Test
-    fun displayTitle_usesFallback_ifCategoryAndNoteAreMissing() {
-        val tx = TransactionEntity(type = TxType.EXPENSE, amountPaise = 1000, categoryId = 1, payment = PaymentMethod.CASH, note = "", occurredAtMillis = 0, localDate = 0, createdAtMillis = 0, updatedAtMillis = 0)
-        
-        val withCat = TransactionWithCategory(tx, null)
-        assertEquals("Expense", withCat.displayTitle())
+    fun note_takes_precedence() {
+        val txWithCat = TransactionWithCategory(
+            transaction = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "Coffee", 0L, 0L, TxSource.MANUAL, null, 0L, 0L),
+            category = CategoryEntity(1L, "Food", TxType.EXPENSE, 1)
+        )
+        assertEquals("Coffee", txWithCat.displayTitle())
     }
 }

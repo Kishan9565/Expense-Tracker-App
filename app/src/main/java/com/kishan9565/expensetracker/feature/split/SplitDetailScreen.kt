@@ -15,14 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kishan9565.expensetracker.core.designsystem.AmountText
-import com.kishan9565.expensetracker.core.money.Money
 import com.kishan9565.expensetracker.core.ui.ObserveAsEvents
 import kotlinx.coroutines.launch
 
 @Composable
 fun SplitDetailRoot(
-    vm: SplitDetailViewModel = hiltViewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    vm: SplitDetailViewModel = hiltViewModel()
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }
@@ -181,6 +180,7 @@ fun MembersTab(members: List<com.kishan9565.expensetracker.data.db.SplitMemberEn
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddExpenseDialog(
     members: List<com.kishan9565.expensetracker.data.db.SplitMemberEntity>,
@@ -201,16 +201,16 @@ fun AddExpenseDialog(
                 OutlinedTextField(value = note, onValueChange = { note = it }, label = { Text("Description") }, modifier = Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Paid by:", style = MaterialTheme.typography.labelMedium)
-                // Simple segmented/chip select for payer
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    members.take(3).forEach { m ->
+                
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    members.forEach { m ->
                         FilterChip(selected = paidBy == m.id, onClick = { paidBy = m.id }, label = { Text(m.name) })
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Split between:", style = MaterialTheme.typography.labelMedium)
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    members.take(3).forEach { m ->
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    members.forEach { m ->
                         FilterChip(
                             selected = includedMembers.contains(m.id),
                             onClick = { 

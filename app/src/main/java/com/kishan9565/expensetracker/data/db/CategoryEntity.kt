@@ -8,10 +8,8 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val type: TxType,
-    val iconKey: String,
-    val keywords: String = "",
-    val sortOrder: Int = 0,
-    val archived: Boolean = false
+    val sortOrder: Int,
+    val archived: Boolean = false,
+    val iconKey: String = "other",
+    val keywords: String = ""
 )
-
-enum class TxType { EXPENSE, INCOME }

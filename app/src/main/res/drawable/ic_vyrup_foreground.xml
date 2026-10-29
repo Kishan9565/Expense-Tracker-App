@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- The V: a smooth curve like the spending chart. Kept inside the 66dp safe zone. -->
+    <path
+        android:pathData="M34,36 C37,48 43,64 49,72 C52,76 56,75 59,69 C64,59 68,48 73,39"
+        android:fillColor="#00000000"
+        android:strokeColor="#556EE6"
+        android:strokeWidth="9.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- The dot: "today" on the curve -->
+    <path
+        android:pathData="M73,39 m-6,0 a6,6 0 1,1 12,0 a6,6 0 1,1 -12,0"
+        android:fillColor="#28BE87" />
+</vector>

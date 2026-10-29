@@ -3,7 +3,6 @@ package com.kishan9565.expensetracker.feature.split
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,8 +15,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SplitRoot(
-    vm: SplitViewModel = hiltViewModel(),
-    onGroupClick: (Long) -> Unit
+    onGroupClick: (Long) -> Unit,
+    vm: SplitViewModel = hiltViewModel()
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }

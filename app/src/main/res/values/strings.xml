@@ -10,7 +10,15 @@
     <string name="your_month_will_appear_here">Your month will appear here</string>
     <string name="spent_this_month">Spent this month</string>
     <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="delete">Delete</string>
     <string name="undo">Undo</string>
     <string name="transaction_deleted">Transaction deleted</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="transaction_not_found">Transaction not found</string>
+    <string name="upi_invalid_vpa">Invalid UPI ID</string>
+    <string name="upi_name_required">Payee name required</string>
+    <string name="invalid_amount">Invalid amount</string>
+    <string name="upi_pending_exists">A payment is already pending</string>
 </resources>

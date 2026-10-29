@@ -80,4 +80,5 @@ class FixedClock(private val d: LocalDate) : AppClock {
     override fun today(): LocalDate = d
     override fun now(): Instant = Instant.now()
     override fun zone(): ZoneId = ZoneId.systemDefault()
+    override fun todayFlow(): Flow<LocalDate> = flowOf(d)
 }

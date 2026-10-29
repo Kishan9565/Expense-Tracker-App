@@ -8,22 +8,31 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kishan9565.expensetracker.R
+import com.kishan9565.expensetracker.core.time.pickerMillisToLocalDate
 import com.kishan9565.expensetracker.core.ui.ObserveAsEvents
 import com.kishan9565.expensetracker.data.db.CategoryEntity
 import com.kishan9565.expensetracker.data.db.PaymentMethod
 import com.kishan9565.expensetracker.data.db.TxType
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun QuickAddRoot(
@@ -52,7 +61,7 @@ fun QuickAddRoot(
         onUnavailable = { scope.launch { snackbar.showSnackbar("Speech recognition not available") } }
     )
 
-    QuickAddScreen(state, vm::onAction, snackbar, speechLauncher, onLaunchUpi)
+    QuickAddScreen(state, vm::onAction, snackbar, speechLauncher, onLaunchUpi = onLaunchUpi)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,13 +125,20 @@ fun QuickAddScreen(
                 }
             }
 
-            // Payment Methods
+            // Payment Methods and Date
             val paymentMethods = PaymentMethod.entries.toList()
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
+                item(key = "date_chip") {
+                    DateChip(
+                        date = state.date, 
+                        today = LocalDate.now(), // Real clock today visually
+                        onDate = { onAction(QuickAddAction.OnDate(it)) }
+                    )
+                }
                 items(count = paymentMethods.size, key = { paymentMethods[it].name }) { index ->
                     val method = paymentMethods[index]
                     PaymentMethodChip(
@@ -151,6 +167,39 @@ fun QuickAddScreen(
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateChip(date: LocalDate, today: LocalDate, onDate: (LocalDate) -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    FilterChip(selected = true, onClick = { open = true }, label = { Text(dateLabel(date, today)) })
+    if (open) {
+        val picker = rememberDatePickerState(
+            initialSelectedDateMillis = date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(),
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long) =
+                    utcTimeMillis.pickerMillisToLocalDate() <= today
+            },
+        )
+        DatePickerDialog(
+            onDismissRequest = { open = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    picker.selectedDateMillis?.let { onDate(it.pickerMillisToLocalDate()) }
+                    open = false
+                }) { Text(stringResource(R.string.ok)) }
+            },
+            dismissButton = { TextButton(onClick = { open = false }) { Text(stringResource(R.string.cancel)) } },
+        ) { DatePicker(state = picker) }
+    }
+}
+
+@Composable
+fun dateLabel(d: LocalDate, today: LocalDate): String = when (d) {
+    today -> stringResource(R.string.today)
+    today.minusDays(1) -> stringResource(R.string.yesterday)
+    else -> d.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
 }
 
 @Composable

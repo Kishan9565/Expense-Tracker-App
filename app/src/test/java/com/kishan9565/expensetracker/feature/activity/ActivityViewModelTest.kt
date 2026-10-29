@@ -6,6 +6,7 @@ import com.kishan9565.expensetracker.data.db.DayTotal
 import com.kishan9565.expensetracker.data.db.PaymentMethod
 import com.kishan9565.expensetracker.data.db.TransactionEntity
 import com.kishan9565.expensetracker.data.db.TransactionWithCategory
+import com.kishan9565.expensetracker.data.db.TxSource
 import com.kishan9565.expensetracker.data.db.TxType
 import com.kishan9565.expensetracker.domain.model.NewTransaction
 import com.kishan9565.expensetracker.domain.repository.TransactionRepository
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -23,7 +25,6 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.ZoneId
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -45,7 +46,7 @@ class ActivityViewModelTest {
         val repo = FakeTransactionRepository()
         val vm = ActivityViewModel(repo, FixedClock(LocalDate.of(2026, 10, 25)))
         
-        val tx = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "Coffee", 0L, 0L, createdAtMillis = 0L, updatedAtMillis = 0L)
+        val tx = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "Coffee", 0L, 0L, TxSource.MANUAL, null, createdAtMillis = 0L, updatedAtMillis = 0L)
         
         vm.onAction(ActivityAction.Delete(tx))
         
@@ -60,7 +61,7 @@ class ActivityViewModelTest {
         val repo = FakeTransactionRepository()
         val vm = ActivityViewModel(repo, FixedClock(LocalDate.of(2026, 10, 25)))
         
-        val tx = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "Coffee", 0L, 0L, createdAtMillis = 0L, updatedAtMillis = 0L)
+        val tx = TransactionEntity(1L, TxType.EXPENSE, 1000L, 1L, PaymentMethod.UPI, "Coffee", 0L, 0L, TxSource.MANUAL, null, createdAtMillis = 0L, updatedAtMillis = 0L)
         
         vm.onAction(ActivityAction.UndoDelete(tx))
         
@@ -92,4 +93,5 @@ class FixedClock(private val d: LocalDate) : AppClock {
     override fun today(): LocalDate = d
     override fun now(): Instant = Instant.now()
     override fun zone(): ZoneId = ZoneId.systemDefault()
+    override fun todayFlow(): Flow<LocalDate> = flowOf(d)
 }

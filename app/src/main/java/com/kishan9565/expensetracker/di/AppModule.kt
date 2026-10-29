@@ -5,14 +5,13 @@ import androidx.room.Room
 import com.kishan9565.expensetracker.core.time.AppClock
 import com.kishan9565.expensetracker.core.time.RealAppClock
 import com.kishan9565.expensetracker.data.db.AppDatabase
-import com.kishan9565.expensetracker.data.db.BudgetDao
 import com.kishan9565.expensetracker.data.db.CategoryDao
 import com.kishan9565.expensetracker.data.db.MIGRATION_1_2
 import com.kishan9565.expensetracker.data.db.MIGRATION_2_3
 import com.kishan9565.expensetracker.data.db.MIGRATION_3_4
+import com.kishan9565.expensetracker.data.db.MIGRATION_4_5
 import com.kishan9565.expensetracker.data.db.PayeeDao
-import com.kishan9565.expensetracker.data.db.PendingPaymentDao
-import com.kishan9565.expensetracker.data.db.RecurringDao
+import com.kishan9565.expensetracker.data.db.PendingDao
 import com.kishan9565.expensetracker.data.db.SeedDefaultCategories
 import com.kishan9565.expensetracker.data.db.SplitDao
 import com.kishan9565.expensetracker.data.db.TransactionDao
@@ -52,8 +51,8 @@ object AppModule {
             AppDatabase::class.java,
             "expenses.db"
         )
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-        .addCallback(SeedDefaultCategories)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+        .addCallback(SeedDefaultCategories())
         .build()
     }
 
@@ -67,19 +66,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideBudgetDao(db: AppDatabase): BudgetDao = db.budgetDao()
-    
-    @Provides
-    @Singleton
-    fun provideRecurringDao(db: AppDatabase): RecurringDao = db.recurringDao()
-
-    @Provides
-    @Singleton
     fun providePayeeDao(db: AppDatabase): PayeeDao = db.payeeDao()
 
     @Provides
     @Singleton
-    fun providePendingPaymentDao(db: AppDatabase): PendingPaymentDao = db.pendingPaymentDao()
+    fun providePendingDao(db: AppDatabase): PendingDao = db.pendingDao()
     
     @Provides
     @Singleton
@@ -100,17 +91,17 @@ abstract class RepositoryModule {
     
     @Binds
     @Singleton
-    abstract fun bindBudgetRepository(impl: RoomBudgetRepository): BudgetRepository
-    
-    @Binds
-    @Singleton
-    abstract fun bindRecurringRepository(impl: RoomRecurringRepository): RecurringRepository
-
-    @Binds
-    @Singleton
     abstract fun bindUserPrefsRepository(impl: DataStoreUserPrefsRepository): UserPrefsRepository
 
     @Binds
     @Singleton
     abstract fun bindSplitRepository(impl: RoomSplitRepository): SplitRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBudgetRepository(impl: RoomBudgetRepository): BudgetRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRecurringRepository(impl: RoomRecurringRepository): RecurringRepository
 }

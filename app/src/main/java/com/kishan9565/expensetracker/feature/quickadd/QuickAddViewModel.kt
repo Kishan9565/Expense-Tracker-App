@@ -7,7 +7,8 @@ import com.kishan9565.expensetracker.core.money.AmountError
 import com.kishan9565.expensetracker.core.money.Money
 import com.kishan9565.expensetracker.core.money.Outcome
 import com.kishan9565.expensetracker.core.time.AppClock
-import com.kishan9565.expensetracker.core.time.pickerMillisToLocalDate
+import com.kishan9565.expensetracker.core.time.epochDay
+import com.kishan9565.expensetracker.core.time.toEntryMillis
 import com.kishan9565.expensetracker.core.ui.UiText
 import com.kishan9565.expensetracker.data.db.CategoryEntity
 import com.kishan9565.expensetracker.data.db.PaymentMethod
@@ -28,8 +29,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 data class QuickAddState(
@@ -96,27 +97,40 @@ class QuickAddViewModel @Inject constructor(
     private val _events = Channel<QuickAddEvent>()
     val events = _events.receiveAsFlow()
     
-    private var initialLoadDone = false
+    init {
+        viewModelScope.launch {
+            _state.value = blankState()
+        }
+    }
+
+    private suspend fun blankState(): QuickAddState {
+        val last = prefs.lastUsed.first()
+        val cats = categoryRepo.observeAll().first()
+        val expenseCats = cats.filter { it.type == TxType.EXPENSE }
+        return QuickAddState(
+            date = clock.today(),
+            type = TxType.EXPENSE,
+            categoryId = last.categoryId?.takeIf { id -> expenseCats.any { it.id == id } },
+            payment = last.payment,
+            source = TxSource.MANUAL,   // never inherit VOICE / UPI
+            payeeId = null,             // never inherit a payee
+            categories = expenseCats,
+            amountText = "",
+            note = "",
+            isSaving = false,
+            isLoading = false,
+            amountError = null,
+            existingId = null
+        )
+    }
 
     fun loadTransaction(id: Long?) {
-        if (id == null) {
-            if (!initialLoadDone) {
-                // Initialize default state for a new transaction
-                viewModelScope.launch {
-                    val last = prefs.lastUsed.first()
-                    _state.update { it.copy(categoryId = last.categoryId, payment = last.payment, existingId = null, amountText = "", note = "", date = clock.today(), amountError = null, isSaving = false) }
-                    val cats = categoryRepo.observeAll().first()
-                    _state.update { s -> s.copy(categories = cats.filter { it.type == s.type }) }
-                }
-                initialLoadDone = true
-            } else {
-                _state.update { it.copy(existingId = null, amountText = "", note = "", date = clock.today(), amountError = null, isSaving = false) }
-            }
-            return
-        }
-        
-        // Editing existing transaction
         viewModelScope.launch {
+            if (id == null) {
+                _state.value = blankState()
+                return@launch
+            }
+            
             _state.update { it.copy(isLoading = true) }
             val existing = repo.getById(id)
             if (existing != null) {
@@ -198,14 +212,24 @@ class QuickAddViewModel @Inject constructor(
                     if (s.existingId != null) {
                         val existing = repo.getById(s.existingId)
                         if (existing != null) {
+                            val newDay = s.date.epochDay()
+                            val occurred = if (existing.localDate != newDay)
+                                s.date.toEntryMillis(clock.zone(), Instant.ofEpochMilli(existing.occurredAtMillis))
+                            else existing.occurredAtMillis
+                                
                             repo.update(existing.copy(
                                 type = s.type,
                                 amountPaise = amount.value,
                                 categoryId = categoryId,
                                 payment = s.payment,
                                 note = s.note.trim(),
-                                localDate = s.date.toEpochDay()
+                                localDate = newDay,
+                                occurredAtMillis = occurred
                             ))
+                        } else {
+                            _events.send(QuickAddEvent.Snack(UiText.Dynamic("Transaction not found")))
+                            _state.update { it.copy(isSaving = false) }
+                            return@launch
                         }
                     } else {
                         repo.add(NewTransaction(s.type, amount.value, categoryId, s.payment, s.note.trim(), s.date, s.source, s.payeeId))
@@ -213,17 +237,7 @@ class QuickAddViewModel @Inject constructor(
                     
                     prefs.saveLastUsed(categoryId, s.payment)
                     
-                    // Reset on success so next open is a clean form
-                    _state.update { 
-                        it.copy(
-                            isSaving = false,
-                            existingId = null,
-                            amountText = "",
-                            note = "",
-                            amountError = null,
-                            date = clock.today()
-                        )
-                    }
+                    _state.value = blankState()
                     _events.send(QuickAddEvent.Saved)
                 }
             }

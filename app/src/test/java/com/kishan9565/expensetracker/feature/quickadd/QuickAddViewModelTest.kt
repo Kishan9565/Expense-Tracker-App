@@ -20,6 +20,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -33,7 +34,6 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.ZoneId
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -56,6 +56,8 @@ class QuickAddViewModelTest {
         val repo = FakeTransactionRepository()
         val vm = QuickAddViewModel(repo, FakeCategoryRepository(), FakeUserPrefs(), FixedClock(LocalDate.of(2026, 10, 25)))
         
+        testScheduler.advanceUntilIdle() // Ensure initial blank state is applied
+        
         vm.onAction(QuickAddAction.OnKey('0'))
         vm.onAction(QuickAddAction.OnSave)
         
@@ -71,6 +73,8 @@ class QuickAddViewModelTest {
     fun save_success_resets_form_state() = runTest {
         val repo = FakeTransactionRepository()
         val vm = QuickAddViewModel(repo, FakeCategoryRepository(), FakeUserPrefs(), FixedClock(LocalDate.of(2026, 10, 25)))
+        
+        testScheduler.advanceUntilIdle() // Ensure initial blank state is applied
         
         vm.onAction(QuickAddAction.OnCategory(1L))
         vm.onAction(QuickAddAction.OnKey('1'))
@@ -124,4 +128,5 @@ class FixedClock(private val d: LocalDate) : AppClock {
     override fun today(): LocalDate = d
     override fun now(): Instant = Instant.now()
     override fun zone(): ZoneId = ZoneId.systemDefault()
+    override fun todayFlow(): Flow<LocalDate> = flowOf(d)
 }
